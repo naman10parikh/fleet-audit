@@ -21,11 +21,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 STEPS = [
-    "mkdir -p /home/user/fleet-audit && tar -xzf /home/user/fleet-audit.tar.gz -C /home/user/fleet-audit",
-    "python3 -m venv /home/user/venv && /home/user/venv/bin/pip install --quiet /home/user/fleet-audit",
-    "/home/user/venv/bin/fleet-audit --version",
-    "cd /home/user/fleet-audit && /home/user/venv/bin/python -m unittest",
-    "cd /home/user/fleet-audit && /home/user/venv/bin/python evals/run.py",
+    "mkdir -p /tmp/fleet-audit && tar -xzf /tmp/fleet-audit.tar.gz -C /tmp/fleet-audit",
+    "python3 -m venv /tmp/venv && /tmp/venv/bin/pip install --quiet /tmp/fleet-audit",
+    "/tmp/venv/bin/fleet-audit --version",
+    "cd /tmp/fleet-audit && /tmp/venv/bin/python -m unittest",
+    "cd /tmp/fleet-audit && /tmp/venv/bin/python evals/run.py",
 ]
 
 
@@ -44,7 +44,7 @@ def main() -> int:
     sbx = Sandbox.create(timeout=600)
     print(f"sandbox {sbx.sandbox_id} up in {time.monotonic() - started:.2f}s")
     try:
-        sbx.files.write("/home/user/fleet-audit.tar.gz", io.BytesIO(archive.stdout))
+        sbx.files.write("/tmp/fleet-audit.tar.gz", io.BytesIO(archive.stdout))
         for step in STEPS:
             t = time.monotonic()
             try:
