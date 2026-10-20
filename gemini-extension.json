@@ -1,0 +1,16 @@
+{
+  "name": "fleet-audit",
+  "version": "0.1.0",
+  "description": "Scan your repositories for every surface coding agents need, and fix them.",
+  "contextFileName": "GEMINI.md",
+  "mcpServers": {
+    "fleet-audit": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/naman10parikh/fleet-audit",
+        "fleet-audit-mcp"
+      ]
+    }
+  }
+}

@@ -1,0 +1,9 @@
+# fleet-audit scrub patterns: one regex per line. Copy this file OUTSIDE every repository and add your own.
+# A line is a case-insensitive Perl-style regex. "CS " in front makes it case-sensitive.
+# "==>text" at the end is what `fleet-audit history` writes instead of a match (default: [removed]).
+# Lines that start with # are comments. Results name each pattern by its number: p1, p2, ...
+#
+# p1: an email address shape
+[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}
+# p2: a home-folder path shape (macOS or Linux); a history rewrite turns it into ~/
+CS (/Users|/home)/[A-Za-z0-9._-]+/==>~/

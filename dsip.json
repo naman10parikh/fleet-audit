@@ -1,0 +1,34 @@
+{
+  "dsip": "0.1",
+  "product": "fleet-audit",
+  "levels": ["agent"],
+  "domains": {
+    "detection": "does the scan still find every surface on the complete fixture and none on the bare one?",
+    "checks": "does a bare repository still miss exactly the expected checks, and a complete one none?",
+    "scrub": "does the scrub still find tree, history and message hits by number, and never print the matched text?",
+    "kit": "does the kit still write exactly what is missing, write nothing on a second run, and nothing in a dry run?",
+    "self-audit": "does this repository still pass its own checks, and does its tree match no example pattern?"
+  },
+  "loop": {
+    "cadence": "nightly",
+    "steps": ["run-evals", "self-audit", "self-scrub", "propose", "validate", "ship"]
+  },
+  "selection": "performance",
+  "eval": {
+    "rubric": "evals/run.py: golden tasks on fixture repositories built fresh each run (detection precision and recall, the exact checks a bare repository misses, nothing missing on a complete one, the list kind, the scrub by number without matched text, the kit's writes, idempotence and dry run, the report, and an MCP round trip); blocking in .github/workflows/ci.yml on every push and pull request",
+    "gate": "unit-tests-pass && evals-pass && no-regression",
+    "noSelfGrading": true
+  },
+  "snapback": {
+    "granularity": ["skill", "employee"],
+    "vcs": "git"
+  },
+  "externalIntelligence": {
+    "enabled": false,
+    "note": "the loop reads only this repository and its fixture repositories"
+  },
+  "proposals": {
+    "where": "an issue titled 'fleet-audit loop: proposals', plus the proposals artifact of each run",
+    "who_merges": "a person; the loop never commits and never merges ('ship' means a person merges a validated proposal)"
+  }
+}

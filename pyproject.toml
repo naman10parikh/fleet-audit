@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "fleet-audit"
+dynamic = ["version"]
+description = "Scan your repositories for every surface coding agents need, and fix them."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+authors = [{ name = "Naman Parikh" }]
+keywords = ["agent-native", "agents-md", "llms-txt", "mcp", "claude-code", "agent-skills", "audit", "scrub"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = []
+
+[project.optional-dependencies]
+sandbox = ["e2b>=2"]
+
+[project.scripts]
+fleet-audit = "fleet_audit.cli:main"
+fleet-audit-mcp = "fleet_audit.mcp_server:main"
+
+[project.urls]
+Homepage = "https://github.com/naman10parikh/fleet-audit"
+Issues = "https://github.com/naman10parikh/fleet-audit/issues"
+
+[tool.hatch.version]
+path = "src/fleet_audit/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/fleet_audit"]

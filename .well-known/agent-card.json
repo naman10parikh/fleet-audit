@@ -1,0 +1,36 @@
+{
+  "name": "Muster",
+  "description": "Scan your repositories for every surface coding agents need, and fix them.",
+  "url": "https://github.com/naman10parikh/fleet-audit",
+  "version": "0.1.0",
+  "provider": {
+    "organization": "Naman Parikh",
+    "url": "https://github.com/naman10parikh"
+  },
+  "capabilities": {
+    "streaming": false
+  },
+  "defaultInputModes": [
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "audit-a-repo",
+      "name": "audit-a-repo",
+      "description": "When asked what a repository is missing for agents, or where a set of repositories stands."
+    },
+    {
+      "id": "scrub-before-public",
+      "name": "scrub-before-public",
+      "description": "Before a repository goes public: scrub tree, history, messages and secrets, triage, plan a rewrite."
+    },
+    {
+      "id": "fix-with-the-kit",
+      "name": "fix-with-the-kit",
+      "description": "After an audit: write the facts file, dry-run the kit, write the missing files and README blocks."
+    }
+  ]
+}

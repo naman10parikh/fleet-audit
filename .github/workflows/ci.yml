@@ -1,0 +1,32 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Unit tests
+        run: python -m unittest -v
+      - name: Evals (golden tasks on fixture repositories, MCP)
+        run: python evals/run.py
+      - name: The package installs and its commands answer
+        run: |
+          python -m pip install .
+          fleet-audit --help
+          fleet-audit --version
+          fleet-audit-mcp --help
+      - name: fleet-audit audits itself (nothing missing)
+        run: fleet-audit check . --offline --head

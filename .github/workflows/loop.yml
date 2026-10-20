@@ -1,0 +1,42 @@
+name: improvement loop
+# Runs the evals on a schedule, audits and scrubs this repository and writes proposals.
+# It opens or updates one issue when it has something to propose. It never commits and never merges.
+on:
+  schedule:
+    - cron: "29 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  loop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run the loop (evals, self-audit, self-scrub, proposals)
+        id: loop
+        run: python evals/loop.py --out proposals/latest.md
+      - name: Keep the proposals for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: proposals
+          path: proposals/
+          if-no-files-found: ignore
+      - name: Open or update the proposals issue
+        if: always() && steps.loop.outputs.propose == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="fleet-audit loop: proposals"
+          number=$(gh issue list --state open --search "in:title \"$title\"" --json number --jq '.[0].number')
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body-file proposals/latest.md
+          else
+            gh issue create --title "$title" --body-file proposals/latest.md
+          fi

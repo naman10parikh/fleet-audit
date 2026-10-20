@@ -1,0 +1,92 @@
+# fleet-audit
+
+> Scan your repositories for every surface coding agents need, and fix them. fleet-audit checks a repository against one standard (AGENTS.md, llms.txt, skills, sub-agents, hooks, an MCP server, a CLI, a plugin, an extension, an agent card, a self-improvement loop), scrubs it before it goes public, and writes what is missing.
+
+fleet-audit reads committed state and never writes to a repository unless asked to run its kit. A scrub names each pattern by its number and never prints the matched text; the patterns file lives outside every repository. It is standard-library Python, needs git, uses gh, gitleaks and git-filter-repo when installed, and calls no model. Its persona is Muster.
+
+Run it from GitHub with no clone: `uvx --from git+https://github.com/naman10parikh/fleet-audit fleet-audit --help` for the command line and `uvx --from git+https://github.com/naman10parikh/fleet-audit fleet-audit-mcp` for the MCP server (stdio). Paths below are relative to the repository root.
+
+## Start here
+
+- [AGENTS.md](AGENTS.md): what fleet-audit does, every command and MCP tool, the skills, the files you give it and what not to do.
+- [CLAUDE.md](CLAUDE.md): Claude Code notes (the pre-push scrub hook, the development MCP config); it imports AGENTS.md.
+- [README.md](README.md): what it is, the quick start and how to install it in any coding agent.
+
+## Identity
+
+- [identity/SOUL.md](identity/SOUL.md): who Muster is, what it does and what it refuses.
+- [identity/BRAND.md](identity/BRAND.md): the name's reason, the tagline and the look.
+- [identity/HEARTBEAT.md](identity/HEARTBEAT.md): what is checked, how often, and what happens on an anomaly.
+- [.well-known/agent-card.json](.well-known/agent-card.json): the A2A agent card.
+
+## Command line (`fleet-audit`)
+
+- [src/fleet_audit/cli.py](src/fleet_audit/cli.py): the entry point. Commands:
+  - `fleet-audit check [path] [--facts FILE] [--kind KIND] [--patterns FILE] [--head] [--offline] [--json]`: the checks for one repository.
+  - `fleet-audit scan [path ...] [--owner OWNER] [--clones DIR] [--out FILE]`: measure clones, or an owner's repositories.
+  - `fleet-audit report path ... [--facts-dir DIR] [--out FILE]`: one Markdown page over many repositories.
+  - `fleet-audit scrub path ... --patterns FILE [--head] [--tree] [--no-leaks] [--out FILE]`: before going public.
+  - `fleet-audit kit [path] --facts FILE --owner OWNER --author NAME [--dry-run]`: write what is missing.
+  - `fleet-audit history source ... --patterns FILE [--facts-dir DIR] [--out DIR]`: rewrite a scratch mirror; push nothing.
+  - `fleet-audit route "TASK"` and `fleet-audit runs [--last N]`: the router and the run log.
+
+## MCP server (`fleet-audit-mcp`, stdio)
+
+- [src/fleet_audit/mcp_server.py](src/fleet_audit/mcp_server.py): five tools:
+  - `fleet_scan`: one repository's surfaces, as JSON (reads only).
+  - `fleet_check`: the checks with the fix for each gap (reads only).
+  - `fleet_report`: the Markdown report (reads only).
+  - `fleet_scrub`: counts by pattern number (reads only).
+  - `fleet_kit`: what the kit would write; it writes only with write=true.
+- [.mcp.json](.mcp.json): the config any MCP client can copy; it starts the server from GitHub. The development config is `.mcp.dev.json`.
+
+## How it works
+
+- [src/fleet_audit/scan.py](src/fleet_audit/scan.py): what is measured, from a committed ref.
+- [src/fleet_audit/checks.py](src/fleet_audit/checks.py): the standard as checks (26 for a tool, 8 for a list).
+- [src/fleet_audit/scrub.py](src/fleet_audit/scrub.py): patterns over tree, history and messages; gitleaks; the regex translations.
+- [src/fleet_audit/kit.py](src/fleet_audit/kit.py) and [src/fleet_audit/blocks.py](src/fleet_audit/blocks.py): the files and README blocks the kit writes.
+- [src/fleet_audit/history.py](src/fleet_audit/history.py): the scratch-mirror rewrite.
+- [src/fleet_audit/report.py](src/fleet_audit/report.py): the Markdown report.
+- [scrub-patterns.example.txt](scrub-patterns.example.txt): the patterns file format, with neutral examples.
+- [facts.example.json](facts.example.json): the facts file keys.
+
+## Skills
+
+- [skills/audit-a-repo/SKILL.md](skills/audit-a-repo/SKILL.md): check one repository or many, and plan the fixes.
+- [skills/scrub-before-public/SKILL.md](skills/scrub-before-public/SKILL.md): scrub, triage by pattern number, plan a history rewrite.
+- [skills/fix-with-the-kit/SKILL.md](skills/fix-with-the-kit/SKILL.md): write the facts file, dry-run the kit, write, finish the README.
+
+## Sub-agents
+
+- [.claude/agents/readiness-auditor.md](.claude/agents/readiness-auditor.md): audits and reports; changes nothing.
+- [.claude/agents/surface-fixer.md](.claude/agents/surface-fixer.md): closes agreed gaps in one repository; never pushes.
+
+## Memory
+
+- [memory/MEMORY.md](memory/MEMORY.md): the short bootstrap: invariants, where things are, decisions.
+- [memory/LEARNINGS.md](memory/LEARNINGS.md): every mistake, written as a rule.
+- [scripts/memory_search.py](scripts/memory_search.py): BM25 search over the memory, identity, skills and AGENTS.md.
+
+## Evals and self-improvement
+
+- [evals/run.py](evals/run.py): golden tasks on fixture repositories and an MCP round trip; exits 1 on any failure.
+- [evals/repos.py](evals/repos.py): the fixture repositories (bare, complete, leaky), built fresh each run.
+- [evals/loop.py](evals/loop.py): the nightly loop: evals, a self-audit and a self-scrub, then proposals; it never commits.
+- [dsip.json](dsip.json): the self-improvement contract.
+- [.github/workflows/ci.yml](.github/workflows/ci.yml): tests, evals and the self-audit on every push and pull request.
+- [.github/workflows/loop.yml](.github/workflows/loop.yml): the scheduled loop; it opens or updates one issue when it has a proposal.
+
+## Install surfaces
+
+- [.claude-plugin/plugin.json](.claude-plugin/plugin.json): the Claude Code plugin (skills, sub-agents, the pre-push hook, the MCP server).
+- [.claude-plugin/marketplace.json](.claude-plugin/marketplace.json): the one-plugin marketplace.
+- [hooks/hooks.json](hooks/hooks.json): the plugin's hook, the pre-push scrub on Bash.
+- [gemini-extension.json](gemini-extension.json): the Gemini CLI extension.
+
+## Optional
+
+- [sandbox/run_in_sandbox.py](sandbox/run_in_sandbox.py): run the tests and evals in an E2B sandbox (a billed call, only with `--boot`).
+- [SECURITY.md](SECURITY.md): how to report a vulnerability.
+- [CONTRIBUTING.md](CONTRIBUTING.md): how to contribute.
+- [LICENSE](LICENSE): MIT.

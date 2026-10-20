@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+dist/
+build/
+*.egg-info/
+proposals/
+.fleet-audit/
+scrub-patterns.txt
+.DS_Store

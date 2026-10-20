@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "fleet-audit-dev": {
+      "command": "python3",
+      "args": ["-m", "fleet_audit.mcp_server"],
+      "env": { "PYTHONPATH": "src" }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "my-tool",
+  "display": "My Tool",
+  "kind": "tool",
+  "soul": "",
+  "owns": "",
+  "one_liner": "One plain sentence: what it does, for whom.",
+  "runtime": "python",
+  "cli_bin": "my-tool",
+  "mcp_bin": "my-tool-mcp",
+  "skills": [
+    { "path": "skills/first-skill/SKILL.md", "what": "When to use it, in one line." }
+  ],
+  "components": {
+    "Identity": { "grade": "🟡", "where": "identity/SOUL.md:1" }
+  },
+  "dsip_level": "L1",
+  "visibility": "private",
+  "one_step": { "npx_help": "" },
+  "internal_files": [],
+  "history_replace": [],
+  "brand_line": "",
+  "siblings": [],
+  "owner": "",
+  "author": ""
+}
