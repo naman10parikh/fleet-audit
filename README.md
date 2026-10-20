@@ -5,7 +5,7 @@
 
 **Scan your repositories for every surface coding agents need, and fix them.**
 
-Fleet Audit is an agent-native tool: other agents call it through its skills, its MCP server or its command line. A scheduled job runs its evals and proposes fixes. A person makes every change.
+Fleet Audit is an agent-native tool: other agents call it through its skills, its MCP server or its command line. Its persona is Muster. A scheduled job runs its evals and proposes fixes. A person makes every change.
 
 _Fleet Audit is part of an agent-native play for agent-native systems that can eventually be recursively self-improving and evolving, operated by agent employees._
 
