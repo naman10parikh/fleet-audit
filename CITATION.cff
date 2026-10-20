@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: "Fleet Audit: Scan your repositories for every surface coding agents need, and fix them."
+type: software
+authors:
+  - family-names: Parikh
+    given-names: Naman
+repository-code: "https://github.com/naman10parikh/fleet-audit"
+license: MIT
+version: "0.1.0"
+abstract: "Scan your repositories for every surface coding agents need, and fix them."
+keywords: ["agent-native", "agents-md", "llms-txt", "repository-audit"]
